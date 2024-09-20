@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urna Eletrônica</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      .followTip {
+        color: #000000;
+        padding: 8px;
+        border-radius: 8px;
+        font-size: 20px;
+        margin-top: 20px;
+        background-color: #4e9644;
+      }
+      span {
+        font-size: 20px;
+        margin-left: 10px;
+        color: red;
+      }
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+      }
+      button {
+        background-color: #4e9644;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      .container {
+        background-color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        width: 300px;
+      }
+
+      h1 {
+        margin-bottom: 20px;
+      }
+
+      .input-area {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      .input-area input {
+        font-size: 24px;
+        padding: 10px;
+        width: 100px;
+        text-align: center;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+
+      .candidate {
+        margin-top: 20px;
+      }
+
+      .candidate img {
+        border: 1px solid rgb(104, 206, 9);
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+      }
+
+      .candidate-name {
+        font-size: 18px;
+        margin-top: 10px;
+      }
+
+      .votes {
+        margin-top: 20px;
+        font-size: 18px;
+      }
+
+      .message {
+        font-size: 20px;
+        margin-top: 10px;
+        color: rgb(104, 206, 9);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Urna impossível de hackear 'confia'</h1>
+      <div class="input-area">
+        <input
+          type="text"
+          id="vote-input"
+          maxlength="2"
+          placeholder="Digite o nº"
+        />
+      </div>
+      <button onclick="computeVote()">Enter</button>
+
+      <div id="candidate-area" class="candidate" style="display: none">
+        <img id="candidate-photo" src="" alt="Foto do candidato" />
+        <div id="candidate-name" class="candidate-name"></div>
+      </div>
+
+      <div id="votes-area" class="votes">
+        <div>Votos Candidato 14: <span id="votes-14">0</span></div>
+        <div>Votos Candidato 23: <span id="votes-23">0</span></div>
+      </div>
+
+      <!-- Mensagem de confirmação -->
+      <div id="confirmation-message" class="message"></div>
+
+      <h3 class="followTip">
+        Siga para mais dicas e memes &#128511; <span>&#x2764;</span>
+      </h3>
+    </div>
+
+    <script>
+      // Quantidade de votos para cada candidato
+      let votesFor14 = 0;
+      let votesFor23 = 0;
+      let voteCount23 = 0; // Contador para redirecionar votos do 23 para 14
+
+      // Dados dos candidatos
+      const candidates = {
+        14: {
+          name: "Candidato 14",
+          photo: "./assets/13.jpg", // Atualize para a URL da foto do candidato 14
+        },
+        23: {
+          name: "Candidato 23",
+          photo: "./assets/22.jpg", // Atualize para a URL da foto do candidato 23
+        },
+      };
+
+      // Função que computa o voto
+      function computeVote() {
+        const input = document.getElementById("vote-input").value;
+        const candidate = candidates[input];
+        const message = document.getElementById("confirmation-message");
+
+        if (candidate) {
+          if (input === "14") {
+            votesFor14++;
+            document.getElementById("votes-14").textContent = votesFor14;
+            message.textContent =
+              "Voto computado com sucesso para o Candidato 14!";
+          } else if (input === "23") {
+            voteCount23++;
+
+            // A cada 3 votos no 23, redireciona 1 para o 14
+            if (voteCount23 === 3) {
+              votesFor14++;
+              voteCount23 = 0;
+              document.getElementById("votes-14").textContent = votesFor14;
+              message.textContent =
+                "Voto computado para o Candidato 14 devido à regra de redirecionamento!";
+            } else {
+              votesFor23++;
+              document.getElementById("votes-23").textContent = votesFor23;
+              message.textContent =
+                "Voto computado com sucesso para o Candidato 23!";
+            }
+          }
+
+          // Exibir foto e nome do candidato
+          document.getElementById("candidate-photo").src = candidate.photo;
+          document.getElementById("candidate-name").textContent =
+            candidate.name;
+          document.getElementById("candidate-area").style.display = "block";
+
+          // Limpar input
+          document.getElementById("vote-input").value = "";
+        } else {
+          message.textContent = "Número inválido. Digite 14 ou 23.";
+        }
+      }
+    </script>
+  </body>
+</html>
